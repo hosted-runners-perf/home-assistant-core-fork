@@ -7,7 +7,6 @@ on:
       - dev
 
 jobs:
-
   
   Tester1:
     runs-on: ubuntu-latest
@@ -16,6 +15,17 @@ jobs:
       outputmatrix: ${{ steps.set-matrix.outputs.matrix }}
         
     steps:
+
+    - name: split tests
+    - run: |
+        mkdir -p ./foo.txt
+        echo hello > ./foo.txt
+      
+    - uses: actions/upload-artifact@v4
+      with:
+        name: tests-artifact
+        path: ./foo.txt
+      
     - name: print matrix data
       id: set-matrix
       run: |
@@ -30,6 +40,13 @@ jobs:
       matrix: ${{ fromJson(needs.Tester1.outputs.outputmatrix) }}
         
     steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: tests-artifact
+
+    - name: print test artifact
+      run: cat $GITHUB_WORKSPACE/foo.txt
+
     - name: print matrix data
       run: |
         echo "project ${{ matrix.project }}, config ${{ matrix.config }}"
@@ -69,6 +86,13 @@ jobs:
       matrix: ${{ fromJson(needs.Tester2Script.outputs.outputmatrix) }}
         
     steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: tests-artifact
+
+    - name: print test artifact
+      run: cat $GITHUB_WORKSPACE/foo.txt
+      
     - name: print matrix data
       run: |
         echo "group ${{ matrix.group }}, python-version ${{ matrix.pythonversion }}"
