@@ -27,8 +27,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'go', 'javascript', 'python', 'ruby' ]
-        other: ['foo', 'bar']
+        language: [ 'rust', 'telugu' ]
+        other: ['baz']
         
     steps:
     - name: print matrix data
