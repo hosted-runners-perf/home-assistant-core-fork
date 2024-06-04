@@ -2,6 +2,9 @@ name: "mgrosen-test"
 
 on:
   workflow_dispatch:
+  push:
+    branches:    
+      - dev
 
 jobs:
   Tester1:
@@ -30,7 +33,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
+      matrix: ${{fromJson(needs.Tester1.outputs.matrix)}}
         
     steps:
     - name: print matrix data
