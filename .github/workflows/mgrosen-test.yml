@@ -49,12 +49,12 @@ jobs:
             
             generatedMatrix.push({
               group: 0
-              python-version: 2.7
+              pythonversion: 2.7
             })
 
             generatedMatrix.push({
               group: 2
-              python-version: 3.9
+              pythonversion: 3.9
             })
             
             core.setOutput('outputmatrix', { 'include': generatedMatrix })
@@ -71,4 +71,4 @@ jobs:
     steps:
     - name: print matrix data
       run: |
-        echo "group ${{ matrix.group }}, python-version ${{ matrix.python-version }}"
+        echo "group ${{ matrix.group }}, python-version ${{ matrix.pythonversion }}"
