@@ -1,0 +1,36 @@
+name: "mgrosen-test"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Tester1:
+    name: TesterName
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'go', 'javascript', 'python', 'ruby' ]
+        other: ['foo', 'bar']
+        
+    steps:
+    - name: print matrix data
+      run: |
+        echo "language ${{ matrix.language }}, other ${{ matrix.other }}"
+
+
+  Tester2:
+    name: Tester2Name
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'go', 'javascript', 'python', 'ruby' ]
+        other: ['foo', 'bar']
+        
+    steps:
+    - name: print matrix data
+      run: |
+        echo "language ${{ matrix.language }}, other ${{ matrix.other }}"
