@@ -18,13 +18,12 @@ jobs:
       #   other: ['foo', 'bar']
 
     outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      outputmatrix: ${{ steps.set-matrix.outputs.matrix }}
         
     steps:
     - name: print matrix data
       id: set-matrix
       run: |
-        echo "language ${{ matrix.language }}, other ${{ matrix.other }}"
         echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
 
   Tester2:
@@ -33,7 +32,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.Tester1.outputs.matrix)}}
+      matrix: ${{ fromJson(needs.TesterName.outputs.outputmatrix) }}
         
     steps:
     - name: print matrix data
