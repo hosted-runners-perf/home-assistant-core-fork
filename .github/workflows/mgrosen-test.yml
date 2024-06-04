@@ -7,18 +7,22 @@ jobs:
   Tester1:
     name: TesterName
     runs-on: ubuntu-latest
+    
+    # strategy:
+    #   fail-fast: false
+      # matrix:
+      #   language: [ 'go', 'javascript', 'python', 'ruby' ]
+      #   other: ['foo', 'bar']
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'go', 'javascript', 'python', 'ruby' ]
-        other: ['foo', 'bar']
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
         
     steps:
     - name: print matrix data
+      id: set-matrix
       run: |
         echo "language ${{ matrix.language }}, other ${{ matrix.other }}"
-
+        echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
 
   Tester2:
     name: Tester2Name
@@ -26,11 +30,9 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        language: [ 'rust', 'telugu' ]
-        other: ['baz']
+      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
         
     steps:
     - name: print matrix data
       run: |
-        echo "language ${{ matrix.language }}, other ${{ matrix.other }}"
+        echo "project ${{ matrix.project }}, config ${{ matrix.config }}"
