@@ -28,6 +28,7 @@ jobs:
   Tester2:
     name: Tester2Name
     runs-on: ubuntu-latest
+    needs: Tester1
 
     strategy:
       fail-fast: false
