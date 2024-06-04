@@ -45,7 +45,8 @@ jobs:
         name: tests-artifact
 
     - name: print test artifact
-      run: cat $GITHUB_WORKSPACE/foo.txt
+      run: |
+        cat $GITHUB_WORKSPACE/foo.txt
 
     - name: print matrix data
       run: |
@@ -91,7 +92,8 @@ jobs:
         name: tests-artifact
 
     - name: print test artifact
-      run: cat $GITHUB_WORKSPACE/foo.txt
+      run: |
+        cat $GITHUB_WORKSPACE/foo.txt
       
     - name: print matrix data
       run: |
