@@ -48,12 +48,12 @@ jobs:
             const generatedMatrix = []
             
             generatedMatrix.push({
-              group: 0
+              group: 0,
               pythonversion: 2.7
             })
 
             generatedMatrix.push({
-              group: 2
+              group: 2,
               pythonversion: 3.9
             })
             
