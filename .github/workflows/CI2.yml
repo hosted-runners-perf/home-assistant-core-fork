@@ -57,7 +57,7 @@ jobs:
       # tests_glob: ${{ steps.info.outputs.tests_glob }}
       # tests: ${{ steps.info.outputs.tests }}
       # skip_coverage: ${{ steps.info.outputs.skip_coverage }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Check out code from GitHub
         uses: actions/checkout@v4.1.2
@@ -159,7 +159,7 @@ jobs:
           uv pip install -e . --config-settings editable_mode=compat
           
   TestDiscovery:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: base
 
     # outputs:
