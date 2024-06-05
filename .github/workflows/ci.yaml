@@ -1087,31 +1087,6 @@ jobs:
         run: |
           ./script/check_dirty
 
-  coverage-full:
-    name: Upload test coverage to Codecov (full suite)
-    if: needs.info.outputs.skip_coverage != 'true'
-    runs-on: ubuntu-22.04
-    needs:
-      - info
-      - pytest-full
-      - pytest-postgres
-      - pytest-mariadb
-    timeout-minutes: 10
-    steps:
-      - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.6
-      - name: Download all coverage artifacts
-        uses: actions/download-artifact@v4.1.7
-        with:
-          pattern: coverage-*
-      - name: Upload coverage to Codecov
-        if: needs.info.outputs.test_full_suite == 'true'
-        uses: codecov/codecov-action@v4.4.1
-        with:
-          fail_ci_if_error: true
-          flags: full-suite
-          token: ${{ secrets.CODECOV_TOKEN }}
-
   pytest-partial:
     runs-on: ubuntu-22.04
     if: |
@@ -1223,24 +1198,3 @@ jobs:
         run: |
           ./script/check_dirty
 
-  coverage-partial:
-    name: Upload test coverage to Codecov (partial suite)
-    if: needs.info.outputs.skip_coverage != 'true'
-    runs-on: ubuntu-22.04
-    needs:
-      - info
-      - pytest-partial
-    timeout-minutes: 10
-    steps:
-      - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.6
-      - name: Download all coverage artifacts
-        uses: actions/download-artifact@v4.1.7
-        with:
-          pattern: coverage-*
-      - name: Upload coverage to Codecov
-        if: needs.info.outputs.test_full_suite == 'false'
-        uses: codecov/codecov-action@v4.4.1
-        with:
-          fail_ci_if_error: true
-          token: ${{ secrets.CODECOV_TOKEN }}
