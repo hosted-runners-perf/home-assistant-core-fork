@@ -1,4 +1,4 @@
-name: "mgrosen-test"
+name: "test discovery workflow"
 
 on:
   workflow_dispatch:
@@ -16,9 +16,30 @@ jobs:
         
     steps:
 
+    - name: Check out code from GitHub
+      uses: actions/checkout@v4.1.2
+      
+    - name: Set up Python ${{ env.DEFAULT_PYTHON }}
+      id: python
+      uses: actions/setup-python@v5.1.0
+      with:
+        python-version: ${{ env.DEFAULT_PYTHON }}
+        check-latest: true
+        
+    - name: Restore base Python virtual environment
+      id: cache-venv
+      uses: actions/cache/restore@v4.0.2
+      with:
+        path: venv
+        fail-on-cache-miss: true
+        key: >-
+          ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
+          needs.info.outputs.python_cache_key }}
+
     - name: Run split_tests.py
       run: |
-        . venv/bin/activate
+        # . venv/bin/activate
+        python -m pip install -r ./requirements_test_all.txt
         python -m script.split_tests ${{ needs.info.outputs.test_group_count }} tests
     
     - name: Upload pytest_buckets
