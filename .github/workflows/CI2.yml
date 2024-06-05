@@ -23,7 +23,7 @@ jobs:
       id: python
       uses: actions/setup-python@v5.1.0
       with:
-        python-version: ${{ env.DEFAULT_PYTHON }}
+        python-version: 3.12
         check-latest: true
 
     - name: Run split_tests.py
