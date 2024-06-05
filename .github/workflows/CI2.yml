@@ -4,107 +4,107 @@ on:
   workflow_dispatch:
   push:
     branches:    
-      - dev
+      - test-discovery
 
 jobs:
   
-  Tester1:
+  TestDiscovery:
     runs-on: ubuntu-latest
 
-    outputs:
-      outputmatrix: ${{ steps.set-matrix.outputs.matrix }}
+    # outputs:
+    #   outputmatrix: ${{ steps.set-matrix.outputs.matrix }}
         
     steps:
 
-    # this is where we do test collection, splitting
-    - name: split tests
+    - name: Run split_tests.py
       run: |
-        touch ./foo.txt
-        echo hello > ./foo.txt
-
-    # making those splits available to subsequent jobs
-    - uses: actions/upload-artifact@v4
-      with:
-        name: tests-artifact
-        path: ./foo.txt
-
-    # this is one way to make a new matrix, but is using the old syntax and we def shouldn't use this
-    # this is where we can make the number of test jobs configurable, and probably combined with the previous step for more advanced scenarios
-    - name: print matrix data
-      id: set-matrix
-      run: |
-        echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
-
-  Tester1BuiltMatrix:
-    runs-on: ubuntu-latest
-    needs: Tester1
-
-    # use the matrix we built in the previous job where we collected the tests and split them
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.Tester1.outputs.outputmatrix) }}
-        
-    steps:
-    # get the artifact we shared in the collection job
-    - uses: actions/download-artifact@v4
-      with:
-        name: tests-artifact
-
-    # just testing
-    - name: print test artifact
-      run: |
-        cat $GITHUB_WORKSPACE/foo.txt
-
-    # and show which matrix values we have for the current job.
-    # This is also where we could actually run the tests.
-    - name: print matrix data
-      run: |
-        echo "project ${{ matrix.project }}, config ${{ matrix.config }}"
-
-  # this is a seperate way to build a matrix that I was just curious about
-  Tester2Script:
-    runs-on: ubuntu-latest
-
-    outputs:
-      outputmatrix: ${{ steps.set-matrix.outputs.outputmatrix }}
+        . venv/bin/activate
+        python -m script.split_tests ${{ needs.info.outputs.test_group_count }} tests
     
-    steps:
-      - uses: actions/github-script@v7
-        id: set-matrix
-        with:
-          script: |
-            const generatedMatrix = []
-            
-            generatedMatrix.push({
-              group: 0,
-              pythonversion: 2.7
-            })
-
-            generatedMatrix.push({
-              group: 2,
-              pythonversion: 3.9
-            })
-            
-            core.setOutput('outputmatrix', { 'include': generatedMatrix })
-
-            
-  Tester2BuiltMatrix:
-    runs-on: ubuntu-latest
-    needs: Tester2Script
-
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJson(needs.Tester2Script.outputs.outputmatrix) }}
-        
-    steps:
-    - uses: actions/download-artifact@v4
+    - name: Upload pytest_buckets
+      uses: actions/upload-artifact@v4.3.1
       with:
-        name: tests-artifact
+        name: pytest_buckets
+        path: pytest_buckets.txt
+        overwrite: true
 
-    - name: print test artifact
-      run: |
-        cat $GITHUB_WORKSPACE/foo.txt
+  #   # this is one way to make a new matrix, but is using the old syntax and we def shouldn't use this
+  #   # this is where we can make the number of test jobs configurable, and probably combined with the previous step for more advanced scenarios
+  #   - name: print matrix data
+  #     id: set-matrix
+  #     run: |
+  #       echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
+
+  # Tester1BuiltMatrix:
+  #   runs-on: ubuntu-latest
+  #   needs: Tester1
+
+  #   # use the matrix we built in the previous job where we collected the tests and split them
+  #   strategy:
+  #     fail-fast: false
+  #     matrix: ${{ fromJson(needs.Tester1.outputs.outputmatrix) }}
+        
+  #   steps:
+  #   # get the artifact we shared in the collection job
+  #   - uses: actions/download-artifact@v4
+  #     with:
+  #       name: tests-artifact
+
+  #   # just testing
+  #   - name: print test artifact
+  #     run: |
+  #       cat $GITHUB_WORKSPACE/foo.txt
+
+  #   # and show which matrix values we have for the current job.
+  #   # This is also where we could actually run the tests.
+  #   - name: print matrix data
+  #     run: |
+  #       echo "project ${{ matrix.project }}, config ${{ matrix.config }}"
+
+  # # this is a seperate way to build a matrix that I was just curious about
+  # Tester2Script:
+  #   runs-on: ubuntu-latest
+
+  #   outputs:
+  #     outputmatrix: ${{ steps.set-matrix.outputs.outputmatrix }}
+    
+  #   steps:
+  #     - uses: actions/github-script@v7
+  #       id: set-matrix
+  #       with:
+  #         script: |
+  #           const generatedMatrix = []
+            
+  #           generatedMatrix.push({
+  #             group: 0,
+  #             pythonversion: 2.7
+  #           })
+
+  #           generatedMatrix.push({
+  #             group: 2,
+  #             pythonversion: 3.9
+  #           })
+            
+  #           core.setOutput('outputmatrix', { 'include': generatedMatrix })
+
+            
+  # Tester2BuiltMatrix:
+  #   runs-on: ubuntu-latest
+  #   needs: Tester2Script
+
+  #   strategy:
+  #     fail-fast: false
+  #     matrix: ${{ fromJson(needs.Tester2Script.outputs.outputmatrix) }}
+        
+  #   steps:
+  #   - uses: actions/download-artifact@v4
+  #     with:
+  #       name: tests-artifact
+
+  #   - name: print test artifact
+  #     run: |
+  #       cat $GITHUB_WORKSPACE/foo.txt
       
-    - name: print matrix data
-      run: |
-        echo "group ${{ matrix.group }}, python-version ${{ matrix.pythonversion }}"
+  #   - name: print matrix data
+  #     run: |
+  #       echo "group ${{ matrix.group }}, python-version ${{ matrix.pythonversion }}"
