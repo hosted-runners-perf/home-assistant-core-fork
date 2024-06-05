@@ -25,16 +25,6 @@ jobs:
       with:
         python-version: ${{ env.DEFAULT_PYTHON }}
         check-latest: true
-        
-    - name: Restore base Python virtual environment
-      id: cache-venv
-      uses: actions/cache/restore@v4.0.2
-      with:
-        path: venv
-        fail-on-cache-miss: true
-        key: >-
-          ${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{
-          needs.info.outputs.python_cache_key }}
 
     - name: Run split_tests.py
       run: |
