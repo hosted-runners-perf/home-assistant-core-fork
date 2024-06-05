@@ -188,7 +188,7 @@ jobs:
       run: |
         . venv/bin/activate
         # python -m pip install -r ./requirements_test_all.txt
-        python -m script.split_tests ${{ needs.info.outputs.test_group_count }} tests
+        python -m script.split_tests 10 tests
     
     - name: Upload pytest_buckets
       uses: actions/upload-artifact@v4.3.1
