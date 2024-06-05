@@ -16,16 +16,20 @@ jobs:
         
     steps:
 
+    # this is where we do test collection, splitting
     - name: split tests
       run: |
         touch ./foo.txt
         echo hello > ./foo.txt
-      
+
+    # making those splits available to subsequent jobs
     - uses: actions/upload-artifact@v4
       with:
         name: tests-artifact
         path: ./foo.txt
-      
+
+    # this is one way to make a new matrix, but is using the old syntax and we def shouldn't use this
+    # this is where we can make the number of test jobs configurable, and probably combined with the previous step for more advanced scenarios
     - name: print matrix data
       id: set-matrix
       run: |
@@ -35,23 +39,29 @@ jobs:
     runs-on: ubuntu-latest
     needs: Tester1
 
+    # use the matrix we built in the previous job where we collected the tests and split them
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.Tester1.outputs.outputmatrix) }}
         
     steps:
+    # get the artifact we shared in the collection job
     - uses: actions/download-artifact@v4
       with:
         name: tests-artifact
 
+    # just testing
     - name: print test artifact
       run: |
         cat $GITHUB_WORKSPACE/foo.txt
 
+    # and show which matrix values we have for the current job.
+    # This is also where we could actually run the tests.
     - name: print matrix data
       run: |
         echo "project ${{ matrix.project }}, config ${{ matrix.config }}"
 
+  # this is a seperate way to build a matrix that I was just curious about
   Tester2Script:
     runs-on: ubuntu-latest
 
