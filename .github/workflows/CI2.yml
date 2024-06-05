@@ -52,8 +52,8 @@ jobs:
       # postgresql_groups: ${{ steps.info.outputs.postgresql_groups }}
       python_versions: ${{ steps.info.outputs.python_versions }}
       # test_full_suite: ${{ steps.info.outputs.test_full_suite }}
-      # test_group_count: ${{ steps.info.outputs.test_group_count }}
-      # test_groups: ${{ steps.info.outputs.test_groups }}
+      test_group_count: ${{ steps.info.outputs.test_group_count }}
+      test_groups: ${{ steps.info.outputs.test_groups }}
       # tests_glob: ${{ steps.info.outputs.tests_glob }}
       # tests: ${{ steps.info.outputs.tests }}
       # skip_coverage: ${{ steps.info.outputs.skip_coverage }}
@@ -80,6 +80,12 @@ jobs:
         run: |
           echo "python_versions: ${ALL_PYTHON_VERSIONS}"
           echo "python_versions=${ALL_PYTHON_VERSIONS}" >> $GITHUB_OUTPUT
+          test_groups="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+          test_group_count=10
+          echo "test_group_count: ${test_group_count}"
+          echo "test_group_count=${test_group_count}" >> $GITHUB_OUTPUT
+          echo "test_groups: ${test_groups}"
+          echo "test_groups=${test_groups}" >> $GITHUB_OUTPUT
 
   base:
     name: Prepare dependencies
