@@ -1,14 +1,14 @@
-name: CI
+name: CI (Test Discovery Fork)
 run-name: "${{ github.event_name == 'workflow_dispatch' && format('CI: {0}', github.ref_name) || '' }}"
 
 # yamllint disable-line rule:truthy
 on:
-  push:
-    branches:
-      - dev
-      - rc
-      - master
-  pull_request: ~
+  # push:
+  #   branches:
+  #     - dev
+  #     - rc
+  #     - master
+  # pull_request: ~
   workflow_dispatch:
     inputs:
       full:
