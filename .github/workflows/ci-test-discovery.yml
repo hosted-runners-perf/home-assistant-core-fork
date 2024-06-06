@@ -573,8 +573,6 @@ jobs:
       - base
       - gen-requirements-all
       - hassfest
-      - lint-other
-      - lint-ruff
       - mypy
       - prepare-pytest-full
     strategy:
